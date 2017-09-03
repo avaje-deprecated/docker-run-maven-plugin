@@ -11,7 +11,7 @@
   </parent>
 
   <groupId>org.avaje.docker</groupId>
-  <artifactId>docker-maven-plugin</artifactId>
+  <artifactId>docker-run-maven-plugin</artifactId>
   <version>0.9.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
@@ -20,9 +20,10 @@
     <dependency>
       <groupId>org.avaje.docker</groupId>
       <artifactId>docker-commands</artifactId>
-      <version>0.9.1</version>
+      <version>0.9.2</version>
     </dependency>
 
+    <!-- Used for connectivity test for postgres -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
@@ -59,7 +60,7 @@
         <artifactId>maven-plugin-plugin</artifactId>
         <version>3.3</version>
         <configuration>
-          <goalPrefix>docker-container</goalPrefix>
+          <goalPrefix>docker-run</goalPrefix>
           <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
         <executions>
@@ -68,14 +69,14 @@
             <goals>
               <goal>descriptor</goal>
             </goals>
-            <phase>process-test-classes</phase>
+            <!--<phase>process-test-classes</phase>-->
           </execution>
           <execution>
             <id>help-descriptor</id>
             <goals>
               <goal>helpmojo</goal>
             </goals>
-            <phase>process-classes</phase>
+            <!--<phase>process-classes</phase>-->
           </execution>
         </executions>
       </plugin>

@@ -59,7 +59,7 @@ abstract class BaseContainerStartMojo extends BaseContainerMojo {
     PostgresConfig config = postgresConfig();
     PostgresCommands pg = new PostgresCommands(config);
 
-    getLog().info("starting " + dbContainer + " port:" + dbPort + " extensions:" + dbExtensions + " startMode:" + startMode);
+    getLog().info("starting " + config.name + " port:" + config.hostPort + " extensions:" + config.dbExtensions + " startMode:" + startMode);
 
     pg.start(startMode);
 
