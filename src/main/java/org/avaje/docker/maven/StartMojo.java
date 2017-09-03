@@ -3,12 +3,11 @@ package org.avaje.docker.maven;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
- *
+ * Start all the container(s).
  */
-@Mojo(name = "start", defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES)//, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name = "start", defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES)
 public class StartMojo extends BaseContainerStartMojo {
 
   public void execute() throws MojoExecutionException {

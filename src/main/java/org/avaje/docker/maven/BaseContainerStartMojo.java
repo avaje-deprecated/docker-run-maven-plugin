@@ -53,16 +53,16 @@ abstract class BaseContainerStartMojo extends BaseContainerMojo {
 
   public void startContainers(String startMode) throws MojoExecutionException {
 
-    // check dbType for postgres, mysql etc
+    // todo check dbType for postgres, mysql etc
+    // could also start other containers like elasticsearch, redis etc
+
     PostgresConfig config = postgresConfig();
     PostgresCommands pg = new PostgresCommands(config);
 
-    getLog().info("starting " + dbType + " " + dbContainer + " port:" + dbPort + " extensions:" + dbExtensions + " mode:" + startMode);
+    getLog().info("starting " + dbContainer + " port:" + dbPort + " extensions:" + dbExtensions + " startMode:" + startMode);
 
-    //pg.startWithDropCreate();
     pg.start(startMode);
 
-    // could also start other containers like elasticsearch, redis etc
   }
 
 }

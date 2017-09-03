@@ -3,14 +3,15 @@ package org.avaje.docker.maven;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.avaje.docker.commands.postgres.PostgresCommands;
 import org.avaje.docker.commands.postgres.PostgresConfig;
 
 /**
+ * Only stop (not remove) the container(s).
  *
+ * Potentially not useful.
  */
-@Mojo(name = "stopOnly", defaultPhase = LifecyclePhase.PREPARE_PACKAGE)//, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name = "stopOnly", defaultPhase = LifecyclePhase.PREPARE_PACKAGE)
 public class StopOnlyMojo extends BaseContainerMojo {
 
   public void execute() throws MojoExecutionException {
