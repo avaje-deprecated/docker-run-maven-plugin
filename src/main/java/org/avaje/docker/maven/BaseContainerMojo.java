@@ -3,51 +3,60 @@ package org.avaje.docker.maven;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.avaje.docker.commands.postgres.PostgresConfig;
+import org.avaje.docker.commands.DbConfig;
+import org.avaje.docker.commands.DbConfigFactory;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  */
 abstract class BaseContainerMojo extends AbstractMojo {
 
   /**
-   * Name of the database container.
+   * The directory holding the class files we want to transform.
    */
-  @Parameter(name = "dbContainer")
-  String dbContainer;
-
-  /**
-   * Database type (postgres, mysql etc).
-   */
-  @Parameter(name = "dbType")
-  String dbType;
-
-  /**
-   * Database start mode (dropCreate, create or container [only]).
-   */
-  @Parameter(name = "dbStartMode")
-  String dbStartMode;
-
-
-  /**
-   * Stop mode (remove, none or stop only).
-   */
-  @Parameter(name = "stopMode")
-  String stopMode;
-
+  @Parameter(property = "project.build.testOutputDirectory")
+  String testOutputDir;
 
   public abstract void execute() throws MojoExecutionException;
 
 
-  PostgresConfig postgresBaseConfig() {
+  DbConfig dbConfig(Properties properties) {
 
-    PostgresConfig config = new PostgresConfig();
-    if (defined(dbContainer)) {
-      config.withName(dbContainer);
+    return DbConfigFactory.create(properties);
+  }
+
+
+  Properties loadProperties() {
+
+    Properties properties = new Properties();
+
+    File testOut = new File(testOutputDir);
+    loadFile(properties, testOut);
+
+    return properties;
+  }
+
+  private void loadFile(Properties properties, File dir) {
+
+    File propsFile = new File(dir, "docker-run.properties");
+    if (!propsFile.exists()) {
+      getLog().info("Could not find docker-run.properties at " + propsFile.getAbsolutePath());
+
+    } else {
+      try {
+        FileReader reader = new FileReader(propsFile);
+        properties.load(reader);
+
+        getLog().debug("loaded docker-run.properties: " + properties);
+
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
     }
-    return config;
   }
 
-  boolean defined(String value) {
-    return value != null && !value.trim().isEmpty();
-  }
 }

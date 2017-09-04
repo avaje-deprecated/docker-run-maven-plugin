@@ -3,15 +3,17 @@ package org.avaje.docker.maven;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.avaje.docker.commands.postgres.PostgresCommands;
-import org.avaje.docker.commands.postgres.PostgresConfig;
+import org.avaje.docker.commands.DbCommands;
+import org.avaje.docker.commands.DbConfig;
+import org.avaje.docker.commands.DbConfigFactory;
+
+import java.util.Properties;
 
 /**
  * Stop the containers.
  */
 @Mojo(name = "stop", defaultPhase = LifecyclePhase.PREPARE_PACKAGE)
 public class StopMojo extends BaseContainerMojo {
-
 
   /**
    * Stop the container(s).
@@ -22,21 +24,15 @@ public class StopMojo extends BaseContainerMojo {
    */
   public void execute() throws MojoExecutionException {
 
-    PostgresConfig config = postgresBaseConfig();
-    PostgresCommands pg = new PostgresCommands(config);
+    Properties properties = loadProperties();
+    DbConfig dbConfig = dbConfig(properties);
 
-    getLog().info("stopping " + dbContainer + " mode:" + stopMode);
+    // could also start other containers like elasticsearch, redis etc
+    if (dbConfig.hasPlatform()) {
 
-    if ("stop".equalsIgnoreCase(stopMode)) {
-      getLog().info("stop container (no remove)");
-      pg.stopRemove();
-
-    } else if ("none".equalsIgnoreCase(stopMode)) {
-      getLog().info("leaving container running");
-
-    } else {
-      getLog().info("stop with remove");
-      pg.stop();
+      DbCommands db = DbConfigFactory.createCommands(dbConfig);
+      getLog().info(db.getStopDescription());
+      db.stop();
     }
   }
 
