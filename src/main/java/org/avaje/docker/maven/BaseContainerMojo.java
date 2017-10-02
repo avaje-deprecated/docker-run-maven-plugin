@@ -3,8 +3,7 @@ package org.avaje.docker.maven;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.avaje.docker.commands.DbConfig;
-import org.avaje.docker.commands.DbConfigFactory;
+import org.avaje.docker.container.ContainerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -23,12 +22,10 @@ abstract class BaseContainerMojo extends AbstractMojo {
 
   public abstract void execute() throws MojoExecutionException;
 
-
-  DbConfig dbConfig(Properties properties) {
-
-    return DbConfigFactory.create(properties);
+  ContainerFactory containerFactory() {
+    Properties properties = loadProperties();
+    return new ContainerFactory(properties);
   }
-
 
   Properties loadProperties() {
 

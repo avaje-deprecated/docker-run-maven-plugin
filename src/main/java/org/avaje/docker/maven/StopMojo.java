@@ -3,11 +3,7 @@ package org.avaje.docker.maven;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.avaje.docker.commands.DbCommands;
-import org.avaje.docker.commands.DbConfig;
-import org.avaje.docker.commands.DbConfigFactory;
-
-import java.util.Properties;
+import org.avaje.docker.container.ContainerFactory;
 
 /**
  * Stop the containers.
@@ -24,16 +20,8 @@ public class StopMojo extends BaseContainerMojo {
    */
   public void execute() throws MojoExecutionException {
 
-    Properties properties = loadProperties();
-    DbConfig dbConfig = dbConfig(properties);
-
-    // could also start other containers like elasticsearch, redis etc
-    if (dbConfig.hasPlatform()) {
-
-      DbCommands db = DbConfigFactory.createCommands(dbConfig);
-      getLog().info(db.getStopDescription());
-      db.stop();
-    }
+    ContainerFactory factory = containerFactory();
+    factory.stopContainers(msg -> getLog().info(msg));
   }
 
 }
